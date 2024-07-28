@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>SmartGuard</h1>
+    </header>
+
+    <main>
+        <div class="container">
+            <label for="url-input">Enter URL:</label>
+            <input type="text" id="url-input" placeholder="https://example.com">
+            <button onclick="detectPhishing()">Detect</button>
+            <p id="result"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SmartGuard. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function detectPhishing() {
+            const urlInput = document.getElementById('url-input').value;
+            const result = document.getElementById('result');
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/detect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: urlInput })
+                });
+
+                const data = await response.json();
+
+                if (data.result === 'phishing') {
+                    result.textContent = 'Warning: This URL is identified as a phishing site!';
+                    result.style.color = 'red';
+                } else {
+                    result.textContent = 'This URL seems safe.';
+                    result.style.color = 'green';
+                }
+            } catch (error) {
+                result.textContent = 'Error detecting URL. Please try again later.';
+                result.style.color = 'orange';
+            }
+        }
+    </script>
+</body>
+</html>
